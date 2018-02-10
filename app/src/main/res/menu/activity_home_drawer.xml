@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/nav_home"
+            android:icon="@drawable/home"
+            android:title="Home"
+            android:checked="true"/>
+        <item
+            android:id="@+id/CustomizeFeed"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="Customize your feed" />
+        <item
+            android:id="@+id/ChangeNewsSource"
+            android:visible="false"
+            android:icon="@drawable/source_icon"
+            android:title="Change news source" />
+        <item
+            android:id="@+id/Settings"
+            android:visible="false"
+            android:icon="@drawable/settings"
+            android:title="Settings" />
+
+    </group>
+
+    <item android:title="Others">
+        <menu>
+            <item
+                android:id="@+id/NightMode"
+                android:visible="false"
+                android:icon="@drawable/night_mode"
+                android:title="Night Mode: off" />
+
+            <item
+                android:id="@+id/nav_share"
+                android:icon="@drawable/ic_menu_share"
+                android:title="Share" />
+
+            <item
+                android:id="@+id/AboutDeveloper"
+                android:visible="false"
+                android:icon="@drawable/android"
+                android:title="About Developer" />
+        </menu>
+    </item>
+
+</menu>
