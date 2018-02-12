@@ -1,4 +1,5 @@
 # Newslly - News App
+
 All the news you want. All in one place. Personalized just for you.
 
 Newslly is a news app that gives you latest and best news from multiple sources so you no longer need to swap between apps to stay informed. 
@@ -8,6 +9,8 @@ Newslly is powered by https://newsapi.org.
 Newslly gives you the personalized view of headline stories and local news.
 
 Newslly lets you search through millions of articles from over 5,000 large and small news sources and blogs.
+
+https://shrikanth7698.github.io/Newslly/
 
 <table>
   <tr>
