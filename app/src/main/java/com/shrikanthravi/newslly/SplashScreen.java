@@ -44,7 +44,9 @@ public class SplashScreen extends AppCompatActivity {
                     startActivity(new Intent(SplashScreen.this, CategorySelectionActivity.class));
                 }
                 else{
-                    startActivity(new Intent(SplashScreen.this,HomeActivity.class));
+                    //startActivity(new Intent(SplashScreen.this,HomeActivity.class));
+                    startActivity(new Intent(SplashScreen.this,NewHomeActivity.class));
+
                 }
             }
         },800);

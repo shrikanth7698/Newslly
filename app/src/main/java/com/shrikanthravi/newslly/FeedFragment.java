@@ -1,15 +1,21 @@
 package com.shrikanthravi.newslly;
 
 
+import android.animation.ValueAnimator;
 import android.content.Context;
+import android.content.res.Configuration;
+import android.graphics.Color;
 import android.graphics.Movie;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -19,12 +25,15 @@ import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.shrikanthravi.newslly.data.model.Article;
 import com.shrikanthravi.newslly.data.model.NewsApiResponse;
 import com.shrikanthravi.newslly.data.model.remote.APIService;
 import com.shrikanthravi.newslly.data.model.remote.GlobalData;
+import com.shrikanthravi.newslly.utils.NewsllyLoadingIndicator;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -38,7 +47,9 @@ import java.util.List;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
+import butterknife.ButterKnife;
 import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
+import jp.wasabeef.recyclerview.adapters.SlideInBottomAnimationAdapter;
 import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -59,9 +70,9 @@ public class FeedFragment extends Fragment {
 
 
     RecyclerView newsRV;
-    NewsAdapter newsAdapter;
-    List<Article> newsList;
-    List<Article> copy;
+    static NewsAdapter newsAdapter;
+    public static ArrayList<Article> newsList;
+    ArrayList<Article> copy;
     SimpleDateFormat simpleDateFormat,simpleDateFormat1;
     Calendar c;
     Date d1,d2;
@@ -69,13 +80,27 @@ public class FeedFragment extends Fragment {
     List<String> categoryList;
     SwipeRefreshLayout swipeRefreshLayout;
     int lastFlag=0;
+    NewsllyLoadingIndicator loadingIndicator;
+    public static RelativeLayout rootLayout;
+
+    public static View gradientView;
+    public static Drawable darkModule;
+    public static Drawable lightModule;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_feed, container, false);
 
-        Typeface regular = Typeface.createFromAsset(getActivity().getAssets(), "fonts/product_san_regular.ttf");
+        setRetainInstance(true);
+        gradientView = view.findViewById(R.id.gradientView);
+        darkModule = getActivity().getDrawable(R.drawable.personalize_bg_gradient_dark);
+        lightModule = getActivity().getDrawable(R.drawable.personalize_bg_gradient);
+        rootLayout = view.findViewById(R.id.rootLayout);
+        loadingIndicator = view.findViewById(R.id.loadingIndicator);
+
+        Typeface regular = Typeface.createFromAsset(getActivity().getAssets(), "fonts/product_sans_bold.ttf");
         FontChanger fontChanger = new FontChanger(regular);
         fontChanger.replaceFonts((ViewGroup)view);
         swipeRefreshLayout = view.findViewById(R.id.feedSwipeRefreshLayout);
@@ -83,10 +108,16 @@ public class FeedFragment extends Fragment {
         newsList = new ArrayList<>();
         newsAdapter = new NewsAdapter(newsList,getActivity().getApplicationContext());
 
-        LinearLayoutManager horizontalLayoutManager
-                = new LinearLayoutManager(getActivity().getApplicationContext(), LinearLayoutManager.VERTICAL, false);
-        newsRV.setLayoutManager(horizontalLayoutManager);
-        newsRV.setNestedScrollingEnabled(true);
+        if(getActivity().getResources().getConfiguration().orientation== Configuration.ORIENTATION_LANDSCAPE){
+            GridLayoutManager horizontalLayoutManager
+                    = new GridLayoutManager(getActivity().getApplicationContext(),2);
+            newsRV.setLayoutManager(horizontalLayoutManager);
+        }
+        else {
+            LinearLayoutManager horizontalLayoutManager
+                    = new LinearLayoutManager(getActivity().getApplicationContext(), LinearLayoutManager.VERTICAL, false);
+            newsRV.setLayoutManager(horizontalLayoutManager);
+        }
 
         ScaleInAnimationAdapter animationAdapter = new ScaleInAnimationAdapter(newsAdapter);
         animationAdapter.setFirstOnly(false);
@@ -99,11 +130,21 @@ public class FeedFragment extends Fragment {
             categoryList.add(cats[i]);
         }
         if(isOnline()) {
-            for (int i = 0; i < categoryList.size(); i++) {
-                String[] lang = {"us","in"};
-                for(int j=0;j<2;j++) {
-                    requestHeadlines(categoryList.get(i), i,lang[j]);
+            if(savedInstanceState==null) {
+                for (int i = 0; i < categoryList.size(); i++) {
+                    String[] lang = {"us", "in"};
+                    for (int j = 0; j < 2; j++) {
+                        requestHeadlines(categoryList.get(i), i,lang[j]);
+                    }
+
                 }
+            }
+            else {
+
+                newsList = savedInstanceState.getParcelableArrayList("feedDaw");
+                newsAdapter.notifyDataSetChanged();
+                loadingIndicator.setVisibility(View.GONE);
+                System.out.println("Success daw feed instance "+newsList.size());
 
             }
         }
@@ -198,11 +239,19 @@ public class FeedFragment extends Fragment {
                 }
             }
         });
+
+        if(NewHomeActivity.isNight){
+            setNighMode(false);
+        }
+        else {
+            setNighMode(true);
+        }
         return view;
     }
 
     public void requestHeadlines(String category, final int last,String lang){
         {
+            loadingIndicator.setVisibility(View.VISIBLE);
             swipeRefreshLayout.setRefreshing(true);
 
             OkHttpClient client = new OkHttpClient.Builder()
@@ -288,6 +337,7 @@ public class FeedFragment extends Fragment {
             newsList.addAll(hashSet);
             lastFlag=0;
             newsAdapter.notifyDataSetChanged();
+            loadingIndicator.setVisibility(View.GONE);
         }
     }
 
@@ -336,7 +386,7 @@ public class FeedFragment extends Fragment {
             return connected;
 
         } catch (Exception e) {
-            System.out.println("CheckConnectivity Exception: " + e.getMessage());
+            System.out.println("Check Connectivity Exception: " + e.getMessage());
             Log.v("connectivity", e.toString());
         }
         return connected;
@@ -346,5 +396,42 @@ public class FeedFragment extends Fragment {
         if(isVisibletoUser){
 
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList("feedDaw", newsList);
+    }
+
+    public static void setNighMode(boolean isNight){
+
+        if (isNight){
+            gradientView.setBackground(lightModule);
+            ValueAnimator valueAnimator = ValueAnimator.ofArgb(Color.parseColor("#1e1e1e"),Color.parseColor("#ffffff"));
+            valueAnimator.setDuration(400);
+            valueAnimator.start();
+            valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    rootLayout.setBackgroundColor((int)animation.getAnimatedValue());
+                }
+            });
+
+        }else {
+            gradientView.setBackground(darkModule);
+            ValueAnimator valueAnimator = ValueAnimator.ofArgb(Color.parseColor("#ffffff"),Color.parseColor("#1e1e1e"));
+            valueAnimator.setDuration(400);
+            valueAnimator.start();
+            valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    rootLayout.setBackgroundColor((int)animation.getAnimatedValue());
+                }
+            });
+        }
+        newsAdapter.notifyItemRangeChanged(0,newsList.size());
+        newsAdapter.notifyDataSetChanged();
+
     }
 }

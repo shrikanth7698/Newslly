@@ -1,20 +1,31 @@
 package com.shrikanthravi.newslly;
 
 
+import android.animation.ValueAnimator;
+import android.content.res.Configuration;
+import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
+import jp.wasabeef.recyclerview.adapters.SlideInBottomAnimationAdapter;
 
 
 /**
@@ -28,16 +39,33 @@ public class FeedCustomizationFragment extends Fragment {
     }
 
     RecyclerView categoryRV;
+    public static TextView pickTV;
     List<Category> categories;
     CategoryAdapter categoryAdapter;
     Button updateButton;
-
+    public static RelativeLayout rootLayout;
+    public static LinearLayout gradientView;
+    public static Drawable darkModule;
+    public static Drawable lightModule;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_feed_customization, container, false);
+        pickTV = view.findViewById(R.id.pickTV);
+        rootLayout = view.findViewById(R.id.rootLayout);
+        gradientView = view.findViewById(R.id.gradientView);
+        darkModule = getActivity().getDrawable(R.drawable.personalize_bg_gradient_dark);
+        lightModule = getActivity().getDrawable(R.drawable.personalize_bg_gradient);
+        if(NewHomeActivity.isNight){
+            setNighMode(false);
+            pickTV.setTextColor(getResources().getColor(android.R.color.white));
 
+        }
+        else {
+            pickTV.setTextColor(getResources().getColor(android.R.color.tab_indicator_text));
+        }
+        setRetainInstance(true);
         Typeface regular = Typeface.createFromAsset(getActivity().getAssets(), "fonts/product_san_regular.ttf");
         FontChanger fontChanger = new FontChanger(regular);
         fontChanger.replaceFonts((ViewGroup)view);
@@ -58,9 +86,20 @@ public class FeedCustomizationFragment extends Fragment {
 
         categoryRV.setNestedScrollingEnabled(true);
         categoryAdapter = new CategoryAdapter(categories,getActivity().getApplicationContext());
-        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getActivity().getApplicationContext(),2);
-        categoryRV.setLayoutManager(layoutManager);
-        categoryRV.setAdapter(categoryAdapter);
+        if(getActivity().getResources().getConfiguration().orientation== Configuration.ORIENTATION_LANDSCAPE){
+            RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getActivity().getApplicationContext(),3);
+            categoryRV.setLayoutManager(layoutManager);
+
+        }
+        else {
+            RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getActivity().getApplicationContext(),2);
+            categoryRV.setLayoutManager(layoutManager);
+        }
+
+        ScaleInAnimationAdapter animationAdapter = new ScaleInAnimationAdapter(categoryAdapter);
+        animationAdapter.setFirstOnly(false);
+        animationAdapter.setDuration(300);
+        categoryRV.setAdapter(animationAdapter);
         categoryAdapter.notifyDataSetChanged();
         int count=0;
         for(int i=0;i<categories.size();i++){
@@ -119,6 +158,35 @@ public class FeedCustomizationFragment extends Fragment {
             }
         }
         return "0";
+    }
+    public static void setNighMode(boolean isNight){
+        if (isNight){
+            pickTV.setTextColor(Color.parseColor("#202020"));
+            gradientView.setBackground(lightModule);
+            ValueAnimator valueAnimator = ValueAnimator.ofArgb(Color.parseColor("#1e1e1e"),Color.parseColor("#ffffff"));
+            valueAnimator.setDuration(400);
+            valueAnimator.start();
+            valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    rootLayout.setBackgroundColor((int)animation.getAnimatedValue());
+                }
+            });
+
+        }else {
+            pickTV.setTextColor(Color.parseColor("#ffffff"));
+            gradientView.setBackground(darkModule);
+            ValueAnimator valueAnimator = ValueAnimator.ofArgb(Color.parseColor("#ffffff"),Color.parseColor("#1e1e1e"));
+            valueAnimator.setDuration(400);
+            valueAnimator.start();
+            valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    rootLayout.setBackgroundColor((int)animation.getAnimatedValue());
+                }
+            });
+        }
+
     }
 
 }

@@ -68,7 +68,9 @@ public class SearchFragment extends Fragment {
 
 
     public SearchFragment() {
+
         // Required empty public constructor
+
     }
     SwipeRefreshLayout swipeRefreshLayout;
     RecyclerView newsRV;
@@ -82,6 +84,7 @@ public class SearchFragment extends Fragment {
     RealtimeBlurView blurView;
     int suggestionflag=0;
     boolean isChecked;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

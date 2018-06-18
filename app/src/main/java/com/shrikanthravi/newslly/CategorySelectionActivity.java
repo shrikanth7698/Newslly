@@ -98,7 +98,7 @@ public class CategorySelectionActivity extends AppCompatActivity {
                 }
                 PreferenceConnector.writeString(getApplicationContext(),PreferenceConnector.Categories,categoriesString);
                 System.out.println("cats "+categoriesString);
-                startActivity(new Intent(CategorySelectionActivity.this,HomeActivity.class));
+                startActivity(new Intent(CategorySelectionActivity.this,NewHomeActivity.class));
             }
         });
 

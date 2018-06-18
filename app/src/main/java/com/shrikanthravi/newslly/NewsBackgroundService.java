@@ -146,8 +146,8 @@ public class NewsBackgroundService extends Service {
         try {
             NotificationManager nm = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
             Notification.Builder builder = new Notification.Builder(context);
-            Intent notificationIntent = new Intent(context, HomeActivity.class);
-            PendingIntent contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, 0);
+            //Intent notificationIntent = new Intent(context, HomeActivity.class);
+            //PendingIntent contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, 0);
             Bitmap bitmap = null;
 
 
@@ -172,7 +172,7 @@ public class NewsBackgroundService extends Service {
             }
 
             //set
-            builder.setContentIntent(contentIntent);
+            //builder.setContentIntent(contentIntent);
             builder.setSmallIcon(R.drawable.newslly_icon);
             builder.setContentText(article.getDescription());
             builder.setContentTitle(article.getTitle());

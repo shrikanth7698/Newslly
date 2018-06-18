@@ -1,0 +1,74 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#ffffff"
+    android:id="@+id/rootLayout"
+    tools:context="com.shrikanthravi.newslly.FeedCustomizationFragment">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:layout_marginTop="-45dp"
+        android:paddingTop="55dp"
+        android:clipToPadding="false"
+        android:layout_below="@+id/ll"
+        android:id="@+id/CategoryRV">
+
+    </android.support.v7.widget.RecyclerView>
+    <android.support.v7.widget.CardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        app:cardElevation="10dp"
+        app:cardCornerRadius="20dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="15dp">
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:text="Update"
+            android:visibility="gone"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"
+            android:id="@+id/UpdateButton"
+            android:background="@color/color2"/>
+    </android.support.v7.widget.CardView>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/gradientView"
+            android:weightSum="2"
+            android:background="@drawable/personalize_bg_gradient"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:textColor="@color/color2"
+                android:layout_weight="1"
+                android:textSize="20dp"
+                android:text="Personalize your feed : "
+                android:layout_margin="10dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:layout_weight="1"
+                android:textSize="20dp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="Pick at least 3 topics of your interest"/>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+</RelativeLayout>

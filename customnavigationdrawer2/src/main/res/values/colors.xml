@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="White">#FFFFFF</color>
+    <color name="Black">#000000</color>
+    <color name="transparent_black_percent_60">#6e000000</color>
+    <color name="darkMode">#1e1e1e</color>
+    <color name="white">#c1c1c1</color>
+    <color name="color1">#e74856</color>
+    <color name="color2">#0078d7</color>
+    <color name="color3">#ffb900</color>
+    <color name="color4">#00CC6A</color>
+</resources>

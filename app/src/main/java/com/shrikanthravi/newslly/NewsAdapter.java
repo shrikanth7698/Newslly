@@ -3,8 +3,10 @@ package com.shrikanthravi.newslly;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.media.Image;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,11 +46,10 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.MyViewHolder> 
         public ScrollParallaxImageView newsImage;
         public TextView newsSource;
         public LinearLayout newsDescriptionLayout;
-        public FlowTextView newsDescription;
+        public TextView newsDescription;
         public ImageView upDownButton;
         public TextView publishedTime;
-        public ImageView bookmark;
-        public ImageView share;
+        public CardView rootCardLayout;
         public MyViewHolder(View view) {
             super(view);
             newsName = (TextView) view.findViewById(R.id.title);
@@ -56,11 +57,11 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.MyViewHolder> 
             newsImage.setParallaxStyles(new VerticalMovingStyle());
             newsSource = (TextView) view.findViewById(R.id.source);
             newsDescriptionLayout = (LinearLayout) view.findViewById(R.id.descriptionLayout);
-            newsDescription = (FlowTextView) view.findViewById(R.id.description);
+            newsDescription = (TextView) view.findViewById(R.id.description);
             upDownButton = (ImageView) view.findViewById(R.id.up_down_arrow);
             publishedTime = (TextView) view.findViewById(R.id.updatedTime);
-            bookmark = (ImageView) view.findViewById(R.id.bookmark);
-            share = (ImageView) view.findViewById(R.id.share);
+            rootCardLayout = (CardView) view.findViewById(R.id.rootCardLayout);
+
 
 
         }
@@ -83,6 +84,14 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.MyViewHolder> 
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
 
         Typeface font = Typeface.createFromAsset(context.getAssets(), "fonts/product_san_regular.ttf");
+        if(NewHomeActivity.isNight){
+            holder.rootCardLayout.setCardBackgroundColor(Color.parseColor("#FF2D2D2D"));
+            holder.newsDescription.setTextColor(Color.parseColor("#ffffff"));
+        }
+        else {
+            holder.rootCardLayout.setCardBackgroundColor(Color.parseColor("#ffffff"));
+            holder.newsDescription.setTextColor(Color.parseColor("#000000"));
+        }
         holder.newsName.setText(articleList.get(position).getTitle().replace("<em>","").replace("em>","").toString());
         holder.newsName.setTypeface(font);
         holder.newsSource.setTypeface(font);
@@ -94,7 +103,6 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.MyViewHolder> 
         catch (Exception e){
             e.printStackTrace();
         }
-        holder.newsDescription.setTextSize(37);
         holder.newsDescription.setText(articleList.get(position).getDescription());
         holder.newsSource.setText(articleList.get(position).getSource().getName().toString());
         holder.upDownButton.setOnClickListener(new View.OnClickListener() {
@@ -138,22 +146,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.MyViewHolder> 
         }catch (Exception e){
             e.printStackTrace();
         }
-        holder.bookmark.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(articleList.get(position).isBookmark()){
-                    final int[] stateSet = {android.R.attr.state_checked * (-1)};
-                    holder.bookmark.setImageState(stateSet,true);
-                    articleList.get(position).setBookmark(false);
-                }
-                else{
 
-                    final int[] stateSet = {android.R.attr.state_checked * (1)};
-                    holder.bookmark.setImageState(stateSet,true);
-                    articleList.get(position).setBookmark(true);
-                }
-            }
-        });
 
     }
 
@@ -206,6 +199,8 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.MyViewHolder> 
     public void onAttachedToRecyclerView(RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
     }
+
+
 }
 
 

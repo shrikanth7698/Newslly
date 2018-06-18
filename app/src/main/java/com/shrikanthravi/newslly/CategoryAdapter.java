@@ -1,6 +1,7 @@
 package com.shrikanthravi.newslly;
 
 import android.content.Context;
+import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -95,7 +96,6 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyView
                 }
             }
         });
-
     }
 
     @Override
@@ -114,4 +114,6 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.MyView
     public void setSelectedCount(int count){
         this.selectedCount = count;
     }
+
 }
+

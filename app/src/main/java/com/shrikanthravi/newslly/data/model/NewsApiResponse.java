@@ -14,9 +14,9 @@ public class NewsApiResponse {
     @SerializedName("status")
     @Expose
     private String status;
+
     @SerializedName("articles")
     @Expose
-
     private List<Article> articles = null;
 
     public String getStatus() {

@@ -1,5 +1,8 @@
 package com.shrikanthravi.newslly.data.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -8,7 +11,7 @@ import com.google.gson.annotations.SerializedName;
  */
 
 
-public class Source {
+public class Source implements Parcelable {
 
     @SerializedName("id")
     @Expose
@@ -97,4 +100,42 @@ public class Source {
         this.language = language;
         this.country = country;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.id);
+        dest.writeString(this.name);
+        dest.writeString(this.description);
+        dest.writeString(this.url);
+        dest.writeString(this.category);
+        dest.writeString(this.language);
+        dest.writeString(this.country);
+    }
+
+    protected Source(Parcel in) {
+        this.id = in.readString();
+        this.name = in.readString();
+        this.description = in.readString();
+        this.url = in.readString();
+        this.category = in.readString();
+        this.language = in.readString();
+        this.country = in.readString();
+    }
+
+    public static final Parcelable.Creator<Source> CREATOR = new Parcelable.Creator<Source>() {
+        @Override
+        public Source createFromParcel(Parcel source) {
+            return new Source(source);
+        }
+
+        @Override
+        public Source[] newArray(int size) {
+            return new Source[size];
+        }
+    };
 }

@@ -45,7 +45,7 @@ public class HomeFragment extends Fragment {
         // Inflate the layout for this fragment
         View view= inflater.inflate(R.layout.fragment_home, container, false);
 
-        MobileAds.initialize(getActivity(), "ca-app-pub-1385508150167219~1899865729");
+        MobileAds.initialize(getActivity(), "ca-app-pub-3948730596862295~8706925921");
         mAdView = view.findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);

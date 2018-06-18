@@ -28,7 +28,7 @@ public class WebActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_web);
         progressBar = findViewById(R.id.progressBar);
-        MobileAds.initialize(this, "ca-app-pub-1385508150167219~1899865729");
+        MobileAds.initialize(this, "ca-app-pub-3948730596862295~8706925921");
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         mAdView = findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
